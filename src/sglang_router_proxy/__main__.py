@@ -9,6 +9,7 @@ import uvicorn
 
 
 logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
 
 
 def parse_args():
