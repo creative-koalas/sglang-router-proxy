@@ -1,10 +1,14 @@
 import argparse
 import hashlib
 import json
+import logging
 
 import httpx
 from fastapi import FastAPI, Request, Response
 import uvicorn
+
+
+logger = logging.getLogger()
 
 
 def parse_args():
@@ -81,6 +85,7 @@ async def proxy(path: str, request: Request):
             rank = int(hashlib.sha256(routing_key.encode()).hexdigest(), 16) % args.dp_size
             data["data_parallel_rank"] = rank
             body = json.dumps(data).encode()
+            logger.info(f'Routing key `{routing_key}` sent to DP rank `{rank}`')
 
     async with httpx.AsyncClient(timeout=args.timeout) as client:
         resp = await client.request(
